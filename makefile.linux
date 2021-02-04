@@ -1,0 +1,32 @@
+
+CC = g++
+
+LIBS += -lSDL2 -lGL
+
+BIN = ./bin
+SRC = ./src
+
+OUTPUT = nes-emu
+
+CC_OPTIONS = -std=c++11 -g -Wall -Werror
+
+OBJECTS = $(patsubst $(SRC)/%.cpp, $(BIN)/%.o, $(wildcard $(SRC)/*.cpp))
+
+$(BIN)/%.o: $(SRC)/%.cpp
+	$(CC) $(CC_OPTIONS) -c $^ -o $@
+
+$(BIN)/$(OUTPUT): $(OBJECTS)
+	$(CC) $^ $(LIBS) -o $@
+
+.PHONY: clean
+clean:
+	rm -f $(BIN)/*.o
+	rm -f $(BIN)/$(OUTPUT)
+
+.PHONY: run
+run:
+	$(BIN)/$(OUTPUT)
+
+.PHONY: debug
+debug:
+	gdb $(BIN)/$(OUTPUT)
